@@ -1,10 +1,10 @@
 class Tblang < Formula
   desc "Plugin-based Infrastructure as Code language"
   homepage "https://github.com/SwanHtetAungPhyo/tblang"
-  url "https://github.com/SwanHtetAungPhyo/tblang/archive/refs/tags/v0.1.1.tar.gz"
-  sha256 "079450df92dbb1b0f5b24658476789ad6ec4a1fdd27b5222b29343a1d046f67b"
+  url "https://github.com/SwanHtetAungPhyo/tblang/archive/refs/tags/v1.1.0.tar.gz"
+  sha256 "52110c51380414608f98d6a0806d352da1d1dda8ef94d6f2bd173e94f3eb613d"
   license "MIT"
-  version "0.1.1"
+  version "1.1.0"
   head "https://github.com/SwanHtetAungPhyo/tblang.git", branch: "main"
 
   depends_on "go" => :build
@@ -25,6 +25,16 @@ class Tblang < Formula
         (prefix/"examples").install Dir["tblang-demo/*.tbl"]
         (prefix/"examples").install Dir["tblang-demo/*.md"]
       end
+
+      # Generate shell completions
+      output = Utils.safe_popen_read(bin/"tblang", "completion", "bash")
+      (bash_completion/"tblang").write output
+
+      output = Utils.safe_popen_read(bin/"tblang", "completion", "zsh")
+      (zsh_completion/"_tblang").write output
+
+      output = Utils.safe_popen_read(bin/"tblang", "completion", "fish")
+      (fish_completion/"tblang.fish").write output
     else
       odie "Repository structure not found. Please check the installation."
     end
@@ -43,6 +53,16 @@ class Tblang < Formula
 
       Example files are available at:
         #{prefix}/examples/
+
+      Shell completions have been installed to:
+        #{bash_completion}/tblang
+        #{zsh_completion}/_tblang
+        #{fish_completion}/tblang.fish
+
+      To enable completions, add to your shell config:
+        Bash: source #{bash_completion}/tblang
+        Zsh:  Add #{zsh_completion} to your fpath
+        Fish: Already enabled
 
       To get started:
         1. Configure your AWS credentials:
